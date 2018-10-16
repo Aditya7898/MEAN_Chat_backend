@@ -47,9 +47,13 @@ require('./sockets/streams')(io);
 // routes
 const auth = require('./routes/authRoutes');
 const posts = require('./routes/postRoutes');
+const users = require('./routes/userRoutes');
+const friends = require('./routes/friendsRoute');
 
 app.use('/api/chatapp', auth);
 app.use('/api/chatApp', posts);
+app.use('/api/chatApp', users);
+app.use('/api/chatApp', friends);
 
 server.listen(3000, () => {
   console.log('running on port 3000');
