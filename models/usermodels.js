@@ -28,6 +28,14 @@ const userSchema = mongoose.Schema({
       read: { type: Boolean, default: false },
       date: { type: String, default: '' }
     }
+  ],
+
+  // how many users chatting
+  chatList: [
+    {
+      receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // receiver id
+      msgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' } // messageId of messageModel
+    }
   ]
 });
 

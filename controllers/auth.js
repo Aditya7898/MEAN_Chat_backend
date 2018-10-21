@@ -26,7 +26,7 @@ module.exports = {
     });
 
     const { error, value } = joi.validate(req.body, schema);
-    console.log(value);
+    // console.log(value);
     if (error && error.details) {
       return res.status(HttpStatus.BAD_REQUEST).json({ msg: error.details });
     }
