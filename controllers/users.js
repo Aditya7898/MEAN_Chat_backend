@@ -7,6 +7,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result => {
         res.status(HttpStatus.OK).json({ message: 'All Users', result });
       })
@@ -24,6 +26,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result => {
         res.status(HttpStatus.OK).json({ message: 'User by id', result });
       })
@@ -40,6 +44,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result => {
         res.status(HttpStatus.OK).json({ message: 'User by username', result });
       })

@@ -11,8 +11,8 @@ module.exports = {
     }
 
     const token = req.cookies.auth || req.headers.authorization.split(' ')[1];
-    console.log(token);
-    console.log(req.headers);
+    // console.log(token);
+    // console.log(req.headers);
 
     if (!token) {
       return res
