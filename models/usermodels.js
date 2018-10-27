@@ -30,8 +30,6 @@ const userSchema = mongoose.Schema({
       date: { type: String, default: '' }
     }
   ],
-
-  // how many users chatting
   chatList: [
     {
       receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // receiver id
@@ -39,7 +37,6 @@ const userSchema = mongoose.Schema({
     }
   ],
 
-  // images
   picVersion: { type: String, default: '1540492921' },
   picId: { type: String, default: 'tcl1tjxadxymxfjbzvyw.png' },
   images: [
@@ -47,7 +44,10 @@ const userSchema = mongoose.Schema({
       imgId: { type: String, default: '' },
       imgVersion: { type: String, default: '' }
     }
-  ]
+  ],
+
+  city: { type: String, default: '' },
+  country: { type: String, default: '' }
 });
 
 userSchema.statics.EncryptPassword = async function(password) {
