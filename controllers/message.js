@@ -178,7 +178,7 @@ module.exports = {
         }
       }
     ]);
-    console.log(msg);
+    // console.log(msg);
     if (msg.length > 0) {
       try {
         msg.forEach(async value => {
@@ -205,8 +205,8 @@ module.exports = {
       { $unwind: '$message' },
       { $match: { 'message.receivername': req.user.username } }
     ]);
-    console.log(req.user.username);
-    console.log(msg);
+    // console.log(req.user.username);
+    // console.log(msg);
     if (msg.length > 0) {
       try {
         msg.forEach(async value => {

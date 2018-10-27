@@ -2,14 +2,26 @@ const joi = require('joi');
 const HttpStatus = require('http-status-codes');
 const Post = require('../models/postModel');
 const User = require('../models/usermodels');
+const cloudinary = require('cloudinary');
+
+cloudinary.config({
+  cloud_name: '',
+  api_key: '',
+  api_seceret: ''
+});
 
 module.exports = {
   AddPost(req, res) {
     const schema = joi.object().keys({
-      post: joi.string().required()
+      post: joi.string().required(),
+      image: joi.string().optional()
     });
 
-    const { error } = joi.validate(req.body, schema);
+    const body = {
+      post: req.body.post
+    };
+
+    const { error } = joi.validate(body, schema);
     if (error && error.details) {
       return res.status(HttpStatus.BAD_REQUEST).json({ msg: error.details });
     }
@@ -20,29 +32,68 @@ module.exports = {
       created: new Date()
     };
 
-    Post.create(body)
-      .then(async post => {
-        await User.update(
-          {
-            _id: req.user._id
-          },
-          {
-            $push: {
-              posts: {
-                postId: post._id,
-                post: req.body.post,
-                created: new Date()
+    if (req.body.post && !req.body.image) {
+      Post.create(body)
+        .then(async post => {
+          await User.update(
+            {
+              _id: req.user._id
+            },
+            {
+              $push: {
+                posts: {
+                  postId: post._id,
+                  post: req.body.post,
+                  created: new Date()
+                }
               }
             }
-          }
-        );
-        res.status(HttpStatus.OK).json({ message: 'Post created.', post });
-      })
-      .catch(err => {
-        res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Error Occured.' });
+          );
+          res.status(HttpStatus.OK).json({ message: 'Post created.', post });
+        })
+        .catch(err => {
+          res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Error Occured.' });
+        });
+    }
+
+    if (req.body.post && req.body.image) {
+      cloudinary.uploader.upload(req.body.image, async result => {
+        const reqBody = {
+          user: req.user._id,
+          username: req.user.username,
+          post: req.body.post,
+          imgId: result.public_id,
+          imgVersion: result.version,
+          created: new Date()
+        };
       });
+
+      Post.create(reqBody)
+        .then(async post => {
+          await User.update(
+            {
+              _id: req.user._id
+            },
+            {
+              $push: {
+                posts: {
+                  postId: post._id,
+                  post: req.body.post,
+                  created: new Date()
+                }
+              }
+            }
+          );
+          res.status(HttpStatus.OK).json({ message: 'Post created.', post });
+        })
+        .catch(err => {
+          res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Error Occured.' });
+        });
+    }
   },
 
   // ********** GetAllPost ***********
